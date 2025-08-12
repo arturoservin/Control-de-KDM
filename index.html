@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="shortcut icon" href="./logo-cinepolis-dos.webp"></link>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
   <meta charset="UTF-8">
   <title>Seguimiento de KDMs</title>
+  <style>body {
+  background-color: #F5F5F5; /* White Smoke */
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+}</style>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
@@ -15,8 +21,9 @@
   </style>
 </head>
 <body>
-  <h1>📽 Seguimiento de CPL y KDM</h1>
-  <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="margin-top:10px; padding:5px; width:100%;">
+  <img width="10%" loading="lazy" id="cinepolis_Logo" src="./logo-cinepolis-dos.webp">
+  <h1>  Seguimiento de CPL y KDM</h1>
+  <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="margin-top:10px; padding:5px; width:100%; background-color: F5F5F5;">
 
   <table id="dataTable"></table>
 

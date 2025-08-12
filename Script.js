@@ -11,7 +11,7 @@
     })
     .catch(error => {
       console.error('Error al cargar el CSV:', error);
-      table.innerHTML = '<tr><td colspan="7">No se pudo cargar el archivo CSV.</td></tr>';
+      table.innerHTML = '<tr><td colspan="7">No se pudo cargar la base de datos, intente de nuevo.</td></tr>';
     });
 
   function renderTable(data) {
