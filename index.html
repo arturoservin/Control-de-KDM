@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-  const supabase = supabase.createClient(
-    'https://loeuwyskdvvxjgxjerah.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
-  );
-
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (!session) {
-      window.location.href = '/login.html'; // Redirige si no está logueado
-    }
-  });
-</script>
+  
 
   <link rel="icon" href="https://cinepolis.com/icon.png"></link>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -44,6 +32,21 @@
 
   <script src="./Script.js">
   
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const supabase = window.supabase.createClient(
+      'https://loeuwyskdvvxjgxjerah.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+    );
+
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.href = '/login.html'; // Redirige si no hay sesión
+    }
+  });
 </script>
 
 </body>
