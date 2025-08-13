@@ -1,4 +1,17 @@
+document.addEventListener('DOMContentLoaded', () => {
+  // Mostrar mensaje de carga
+  const table = document.getElementById('dataTable');
+  table.innerHTML = '<p>Cargando películas...</p>';
 
+  // Simular delay de 2 segundos
+  setTimeout(() => {
+    cargarTabla(); // Tu función que genera la tabla
+  }, 2000);
+});
+
+function cargarTabla() {
+  // Aquí va tu lógica actual para cargar el CSV y renderizar la tabla
+  // Por ejemplo:
   const table = document.getElementById('dataTable');
   const inputFiltro = document.getElementById('filtroPelicula');
   let rows = [];
@@ -61,3 +74,10 @@
     renderTable(filtradas);
   });
 
+
+}
+
+  
+  
+  
+  
