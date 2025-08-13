@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = supabase.createClient(
+    'https://loeuwyskdvvxjgxjerah.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+  );
+
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!session) {
+      window.location.href = '/login.html'; // Redirige si no está logueado
+    }
+  });
+</script>
+
   <link rel="icon" href="https://cinepolis.com/icon.png"></link>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -21,6 +35,7 @@
   </style>
 </head>
 <body>
+  
   <img width="8%" loading="lazy" id="cinepolis_Logo" src="./logo-cinepolis-dos.webp">
   <h1>  Seguimiento de CPL y KDM</h1>
   <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="margin-top:10px; padding:5px; width:100%; background-color: F5F5F5;">
