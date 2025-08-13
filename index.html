@@ -27,7 +27,7 @@
   <img width="8%" loading="lazy" id="cinepolis_Logo" src="./logo-cinepolis-dos.webp">
   <h1>  Seguimiento de CPL y KDM</h1>
   <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="margin-top:10px; padding:5px; width:100%; background-color: F5F5F5;">
-
+<button onclick="logout()">Cerrar sesión</button>
   <table id="dataTable"></table>
 
   <script src="./Script.js">
@@ -49,7 +49,7 @@
   });
 
 </script>
-<button onclick="logout()">Cerrar sesión</button>
+
 <script>
   async function logout() {
     const supabase = window.supabase.createClient(
