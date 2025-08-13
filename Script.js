@@ -16,7 +16,7 @@ function cargarTabla() {
   const inputFiltro = document.getElementById('filtroPelicula');
   let rows = [];
 
-  fetch('seguimiento de kdm.csv')
+  fetch('kdm_8f3a2c9b.csv')
     .then(response => response.text())
     .then(csv => {
       rows = csv.trim().split('\n').map(row => row.split(','));
