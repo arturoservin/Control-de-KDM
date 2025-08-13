@@ -48,6 +48,17 @@
     }
   });
 </script>
+<button onclick="logout()">Cerrar sesión</button>
+<script>
+  async function logout() {
+    const supabase = window.supabase.createClient(
+      'https://loeuwyskdvvxjgxjerah.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+    );
+    await supabase.auth.signOut();
+    window.location.href = '/login.html';
+  }
+</script>
 
 </body>
 </html>
