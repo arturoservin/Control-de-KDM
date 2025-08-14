@@ -1,186 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  
-
-  <link rel="icon" href="https://cinepolis.com/icon.png"></link>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
   <meta charset="UTF-8">
   <title>Seguimiento de KDMs</title>
-  <style>body {
-  background-color: #F5F5F5; /* White Smoke */
-  color: #333;
-  font-family: 'Segoe UI', sans-serif;
-}</style>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
-  </style>
+  <link rel="icon" href="https://cinepolis.com/icon.png">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <style>
+    body {
+      background-color: #F5F5F5;
+      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    form {
+      margin-top: 20px;
+    }
+    input[type="text"], input[type="date"] {
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
 </head>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const supabase = window.supabase.createClient(
-      'https://loeuwyskdvvxjgxjerah.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
-    );
-
-    document.getElementById('formKDM').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert('Debes iniciar sesión');
-        return;
-      }
-
-      const form = e.target;
-      const nuevoRegistro = {
-        Pelicula: form['Pelicula'].value,
-        'CPL recibida': form['CPL recibida'].checked,
-        'Fecha de cpl recibida': form['Fecha de cpl recibida'].value,
-        'KDM recibido': form['KDM recibido'].checked,
-        'KDM ingestado': form['KDM ingestado'].checked,
-        'KDM abre': form['KDM abre'].value,
-        'KDM cierra': form['KDM cierra'].value,
-        'Formatos y versiones': form['Formatos y versiones'].value,
-        Distribuidor: form['Distribuidor'].value,
-        user_id: user.id
-      };
-
-      const { error } = await supabase
-        .from('kdms')
-        .insert([nuevoRegistro]);
-
-      if (error) {
-        console.error('Error al insertar registro:', error.message);
-        alert('Hubo un error al guardar el registro');
-      } else {
-        alert('Registro agregado correctamente');
-        form.reset();
-        cargarRegistros(); // Recarga la tabla
-      }
-    });
-  });
-</script>
-
-
-<script>
-  document.getElementById('formKDM').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert('Debes iniciar sesión');
-      return;
-    }
-
-    const form = e.target;
-    const nuevoRegistro = {
-      Pelicula: form['Pelicula'].value,
-      'CPL recibida': form['CPL recibida'].checked,
-      'Fecha de cpl recibida': form['Fecha de cpl recibida'].value,
-      'KDM recibido': form['KDM recibido'].checked,
-      'KDM ingestado': form['KDM ingestado'].checked,
-      'KDM abre': form['KDM abre'].value,
-      'KDM cierra': form['KDM cierra'].value,
-      'Formatos y versiones': form['Formatos y versiones'].value,
-      Distribuidor: form['Distribuidor'].value,
-      user_id: user.id
-    };
-
-    const { error } = await supabase
-      .from('kdms')
-      .insert([nuevoRegistro]);
-
-    if (error) {
-      console.error('Error al insertar registro:', error.message);
-      alert('Hubo un error al guardar el registro');
-    } else {
-      alert('Registro agregado correctamente');
-      form.reset();
-      cargarRegistros(); // Recarga la tabla
-    }
-  });
-</script>
-
-
 <body>
-  
-  <img width="8%" loading="lazy" id="cinepolis_Logo" src="./logo-cinepolis-dos.webp">
-  <h1>  Seguimiento de CPL y KDM</h1>
-  <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="margin-top:10px; padding:5px; width:100%; background-color: F5F5F5;">
-<button onclick="logout()">Cerrar sesión</button>
-  <table id="dataTable"></table>
+  <img width="8%" loading="lazy" src="./logo-cinepolis-dos.webp" alt="Cinépolis Logo">
+  <h1>Seguimiento de CPL y KDM</h1>
 
-<table id="dataTable">
-  <thead>
-    <tr>
-      <th>Pelicula</th>
-      <th>CPL recibida</th>
-      <th>Fecha CPL</th>
-      <th>KDM recibido</th>
-      <th>KDM ingestado</th>
-      <th>KDM abre</th>
-      <th>KDM cierra</th>
-      <th>Formatos y versiones</th>
-      <th>Distribuidor</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <input type="text" id="filtroPelicula" placeholder="🔍 Filtrar por película..." style="width:100%; padding:5px;">
+  <button onclick="logout()">Cerrar sesión</button>
 
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Pelicula</th>
+        <th>CPL recibida</th>
+        <th>Fecha CPL</th>
+        <th>KDM recibido</th>
+        <th>KDM ingestado</th>
+        <th>KDM abre</th>
+        <th>KDM cierra</th>
+        <th>Formatos y versiones</th>
+        <th>Distribuidor</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const supabase = window.supabase.createClient(
-      'https://loeuwyskdvvxjgxjerah.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
-    );
-
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      window.location.href = '/login.html'; // Redirige si no hay sesión
-    }
-  });
-
-</script>
-
-<script>
-  async function logout() {
-    const supabase = window.supabase.createClient(
-      'https://loeuwyskdvvxjgxjerah.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
-    );
-    await supabase.auth.signOut();
-    window.location.href = '/login.html';
-  }
-</script>
-
-<form id="formKDM">
-  <input type="text" name="Pelicula" placeholder="Pelicula" required />
-  <label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
-  <input type="date" name="Fecha de cpl recibida" />
-  <label><input type="checkbox" name="KDM recibido" /> KDM recibido</label>
-  <label><input type="checkbox" name="KDM ingestado" /> KDM ingestado</label>
-  <input type="date" name="KDM abre" />
-  <input type="date" name="KDM cierra" />
-  <input type="text" name="Formatos y versiones" placeholder="Formatos y versiones" />
-  <input type="text" name="Distribuidor" placeholder="Distribuidor" />
-  <button type="submit">Agregar registro</button>
-</form>
-
-
-
-</body>
-</html>
+  <form id="formKDM">
+    <input type="text" name="Pelicula" placeholder="Pelicula" required />
+    <label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
+    <input type="date" name="Fecha de cpl recibida" />
+    <label><input type="checkbox" name="KDM recibido
