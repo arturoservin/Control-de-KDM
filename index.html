@@ -58,6 +58,9 @@
         <td>${registro['KDM recibido'] ? '✅' : '❌'}</td>
         <td>${registro['KDM ingestado'] ? '✅' : '❌'}</td>
         <td>${registro['KDM abre'] || ''}</td>
+        <td>${registro['KDM cierra'] || ''}</td>
+        <td>${registro['Formatos y versiones'] || ''}</td>
+        <td>${registro['Distribuidor'] || ''}</td>
       `;
       tbody.appendChild(fila);
     });
@@ -65,6 +68,7 @@
 
   cargarRegistros();
 </script>
+
 
 
 <body>
@@ -75,7 +79,7 @@
 <button onclick="logout()">Cerrar sesión</button>
   <table id="dataTable"></table>
 
-<table id="tablaKDMs">
+<table id="dataTable">
   <thead>
     <tr>
       <th>Pelicula</th>
@@ -84,10 +88,14 @@
       <th>KDM recibido</th>
       <th>KDM ingestado</th>
       <th>KDM abre</th>
+      <th>KDM cierra</th>
+      <th>Formatos y versiones</th>
+      <th>Distribuidor</th>
     </tr>
   </thead>
   <tbody></tbody>
 </table>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
