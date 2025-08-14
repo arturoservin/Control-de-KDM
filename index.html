@@ -69,6 +69,44 @@
   cargarRegistros();
 </script>
 
+<script>
+  document.getElementById('formKDM').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert('Debes iniciar sesión');
+      return;
+    }
+
+    const form = e.target;
+    const nuevoRegistro = {
+      Pelicula: form['Pelicula'].value,
+      'CPL recibida': form['CPL recibida'].checked,
+      'Fecha de cpl recibida': form['Fecha de cpl recibida'].value,
+      'KDM recibido': form['KDM recibido'].checked,
+      'KDM ingestado': form['KDM ingestado'].checked,
+      'KDM abre': form['KDM abre'].value,
+      'KDM cierra': form['KDM cierra'].value,
+      'Formatos y versiones': form['Formatos y versiones'].value,
+      Distribuidor: form['Distribuidor'].value,
+      user_id: user.id
+    };
+
+    const { error } = await supabase
+      .from('kdms')
+      .insert([nuevoRegistro]);
+
+    if (error) {
+      console.error('Error al insertar registro:', error.message);
+      alert('Hubo un error al guardar el registro');
+    } else {
+      alert('Registro agregado correctamente');
+      form.reset();
+      cargarRegistros(); // Recarga la tabla
+    }
+  });
+</script>
 
 
 <body>
@@ -126,16 +164,19 @@
   }
 </script>
 
-<h2>Agregar nuevo registro</h2>
-<form id="registroForm" style="margin-top: 20px;">
-  <input type="text" id="pelicula" placeholder="Película" required />
-  <label><input type="checkbox" id="cpl_recibida" /> CPL recibida</label>
-  <input type="text" id="fecha_cpl" placeholder="Fecha CPL recibida" />
-  <label><input type="checkbox" id="kdm_recibido" /> KDM recibido</label>
-  <label><input type="checkbox" id="kdm_ingestado" /> KDM ingestado</label>
-  <input type="text" id="kdm_abre" placeholder="KDM abre" />
-  <button type="submit">Agregar</button>
+<form id="formKDM">
+  <input type="text" name="Pelicula" placeholder="Pelicula" required />
+  <label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
+  <input type="date" name="Fecha de cpl recibida" />
+  <label><input type="checkbox" name="KDM recibido" /> KDM recibido</label>
+  <label><input type="checkbox" name="KDM ingestado" /> KDM ingestado</label>
+  <input type="date" name="KDM abre" />
+  <input type="date" name="KDM cierra" />
+  <input type="text" name="Formatos y versiones" placeholder="Formatos y versiones" />
+  <input type="text" name="Distribuidor" placeholder="Distribuidor" />
+  <button type="submit">Agregar registro</button>
 </form>
+
 
 
 </body>
