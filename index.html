@@ -26,50 +26,51 @@
 </head>
 
 <script>
-  const supabase = window.supabase.createClient(
-    'https://loeuwyskdvvxjgxjerah.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
-  );
+  document.addEventListener('DOMContentLoaded', () => {
+    const supabase = window.supabase.createClient(
+      'https://loeuwyskdvvxjgxjerah.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+    );
 
-  async function cargarRegistros() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert('Debes iniciar sesión');
-      return;
-    }
+    document.getElementById('formKDM').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    const { data, error } = await supabase
-      .from('kdms')
-      .select('*')
-      .eq('user_id', user.id);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Debes iniciar sesión');
+        return;
+      }
 
-    if (error) {
-      console.error('Error al cargar registros:', error.message);
-      return;
-    }
+      const form = e.target;
+      const nuevoRegistro = {
+        Pelicula: form['Pelicula'].value,
+        'CPL recibida': form['CPL recibida'].checked,
+        'Fecha de cpl recibida': form['Fecha de cpl recibida'].value,
+        'KDM recibido': form['KDM recibido'].checked,
+        'KDM ingestado': form['KDM ingestado'].checked,
+        'KDM abre': form['KDM abre'].value,
+        'KDM cierra': form['KDM cierra'].value,
+        'Formatos y versiones': form['Formatos y versiones'].value,
+        Distribuidor: form['Distribuidor'].value,
+        user_id: user.id
+      };
 
-    const tbody = document.querySelector('#tablaKDMs tbody');
-    tbody.innerHTML = '';
+      const { error } = await supabase
+        .from('kdms')
+        .insert([nuevoRegistro]);
 
-    data.forEach(registro => {
-      const fila = document.createElement('tr');
-      fila.innerHTML = `
-        <td>${registro['Pelicula'] || ''}</td>
-        <td>${registro['CPL recibida'] ? '✅' : '❌'}</td>
-        <td>${registro['Fecha de cpl recibida'] || ''}</td>
-        <td>${registro['KDM recibido'] ? '✅' : '❌'}</td>
-        <td>${registro['KDM ingestado'] ? '✅' : '❌'}</td>
-        <td>${registro['KDM abre'] || ''}</td>
-        <td>${registro['KDM cierra'] || ''}</td>
-        <td>${registro['Formatos y versiones'] || ''}</td>
-        <td>${registro['Distribuidor'] || ''}</td>
-      `;
-      tbody.appendChild(fila);
+      if (error) {
+        console.error('Error al insertar registro:', error.message);
+        alert('Hubo un error al guardar el registro');
+      } else {
+        alert('Registro agregado correctamente');
+        form.reset();
+        cargarRegistros(); // Recarga la tabla
+      }
     });
-  }
-
-  cargarRegistros();
+  });
 </script>
+
 
 <script>
   document.getElementById('formKDM').addEventListener('submit', async (e) => {
