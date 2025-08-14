@@ -93,7 +93,7 @@
             const { data, error } = await supabase
   .from('kdms')
   .select('*')
-  .order('created_at', { ascending: false }) // Asegúrate de tener esta columna
+  .order('KDM abre', { ascending: false }) // Asegúrate de tener esta columna
   .limit(50);
 
         if (error) {
