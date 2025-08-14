@@ -22,6 +22,51 @@
     th { background-color: #f4f4f4; }
   </style>
 </head>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://loeuwyskdvvxjgxjerah.supabase.co',
+    'TU_API_KEY_PUBLICA'
+  );
+
+  async function cargarRegistros() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert('Debes iniciar sesión');
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('kdms')
+      .select('*')
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error al cargar registros:', error.message);
+      return;
+    }
+
+    const tbody = document.querySelector('#tablaKDMs tbody');
+    tbody.innerHTML = '';
+
+    data.forEach(registro => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${registro['Pelicula'] || ''}</td>
+        <td>${registro['CPL recibida'] ? '✅' : '❌'}</td>
+        <td>${registro['Fecha de cpl recibida'] || ''}</td>
+        <td>${registro['KDM recibido'] ? '✅' : '❌'}</td>
+        <td>${registro['KDM ingestado'] ? '✅' : '❌'}</td>
+        <td>${registro['KDM abre'] || ''}</td>
+      `;
+      tbody.appendChild(fila);
+    });
+  }
+
+  cargarRegistros();
+</script>
+
+
 <body>
   
   <img width="8%" loading="lazy" id="cinepolis_Logo" src="./logo-cinepolis-dos.webp">
@@ -30,9 +75,21 @@
 <button onclick="logout()">Cerrar sesión</button>
   <table id="dataTable"></table>
 
-  <script src="./Script.js">
-  
-</script>
+<table id="tablaKDMs">
+  <thead>
+    <tr>
+      <th>Pelicula</th>
+      <th>CPL recibida</th>
+      <th>Fecha CPL</th>
+      <th>KDM recibido</th>
+      <th>KDM ingestado</th>
+      <th>KDM abre</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
