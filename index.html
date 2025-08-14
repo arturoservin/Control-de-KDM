@@ -65,4 +65,107 @@
     <input type="text" name="Pelicula" placeholder="Pelicula" required />
     <label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
     <input type="date" name="Fecha de cpl recibida" />
-    <label><input type="checkbox" name="KDM recibido
+    <label><input type="checkbox" name="KDM recibido" /> KDM recibido</label>
+    <label><input type="checkbox" name="KDM ingestado" /> KDM ingestado</label>
+    <input type="date" name="KDM abre" />
+    <input type="date" name="KDM cierra" />
+    <input type="text" name="Formatos y versiones" placeholder="Formatos y versiones" />
+    <input type="text" name="Distribuidor" placeholder="Distribuidor" />
+    <button type="submit">Agregar registro</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const supabase = window.supabase.createClient(
+        'https://loeuwyskdvvxjgxjerah.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+      );
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      async function cargarRegistros() {
+        const { data, error } = await supabase
+          .from('kdms')
+          .select('*')
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Error al cargar registros:', error.message);
+          return;
+        }
+
+        const filtro = document.getElementById('filtroPelicula').value.toLowerCase();
+        const tbody = document.querySelector('#dataTable tbody');
+        tbody.innerHTML = '';
+
+        data
+          .filter(r => r['Pelicula']?.toLowerCase().includes(filtro))
+          .forEach(registro => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+              <td>${registro['Pelicula'] || ''}</td>
+              <td>${registro['CPL recibida'] ? '✅' : '❌'}</td>
+              <td>${registro['Fecha de cpl recibida'] || ''}</td>
+              <td>${registro['KDM recibido'] ? '✅' : '❌'}</td>
+              <td>${registro['KDM ingestado'] ? '✅' : '❌'}</td>
+              <td>${registro['KDM abre'] || ''}</td>
+              <td>${registro['KDM cierra'] || ''}</td>
+              <td>${registro['Formatos y versiones'] || ''}</td>
+              <td>${registro['Distribuidor'] || ''}</td>
+            `;
+            tbody.appendChild(fila);
+          });
+      }
+
+      document.getElementById('formKDM').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+
+        const nuevoRegistro = {
+          Pelicula: form['Pelicula'].value,
+          'CPL recibida': form['CPL recibida'].checked,
+          'Fecha de cpl recibida': form['Fecha de cpl recibida'].value,
+          'KDM recibido': form['KDM recibido'].checked,
+          'KDM ingestado': form['KDM ingestado'].checked,
+          'KDM abre': form['KDM abre'].value,
+          'KDM cierra': form['KDM cierra'].value,
+          'Formatos y versiones': form['Formatos y versiones'].value,
+          Distribuidor: form['Distribuidor'].value,
+          user_id: user.id
+        };
+
+        const { error } = await supabase
+          .from('kdms')
+          .insert([nuevoRegistro]);
+
+        if (error) {
+          console.error('Error al insertar registro:', error.message);
+          alert('Hubo un error al guardar el registro');
+        } else {
+          alert('Registro agregado correctamente');
+          form.reset();
+          cargarRegistros();
+        }
+      });
+
+      document.getElementById('filtroPelicula').addEventListener('input', cargarRegistros);
+      cargarRegistros();
+    });
+
+    async function logout() {
+      const supabase = window.supabase.createClient(
+        'https://loeuwyskdvvxjgxjerah.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZXV3eXNrZHZ2eGpneGplcmFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNTUwNDMsImV4cCI6MjA3MDYzMTA0M30.mZmOSQv8sfFeXRdVc9ru01-C8WLlRMp6e2dhf_6Imbw'
+      );
+      await supabase.auth.signOut();
+      window.location.href = '/login.html';
+    }
+  </script>
+</body>
+</html>
