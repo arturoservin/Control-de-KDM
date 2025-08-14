@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!--Generar pdf-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+
   <meta charset="UTF-8">
   <title>Seguimiento de KDMs</title>
   <link rel="icon" href="https://cinepolis.com/icon.png">
@@ -60,6 +66,7 @@
     </thead>
     <tbody></tbody>
   </table>
+  <section id="New_entry">
 <h1>Agregar nuevos registros</h1>
   <form id="formKDM">
     <p>Titulo (tal cual como esta pautado, si ya existen registros de esa pelicula usar el mismo titulo)</p><input type="text" name="Pelicula" placeholder="Pelicula" required />
@@ -73,7 +80,11 @@
     <input type="text" name="Distribuidor" placeholder="Distribuidor" />
     <button type="submit">Agregar registro</button>
   </form>
+  </section>
+  <section id="Generate_report">
+    <button id="generar-pdf">📄 Generar reporte PDF</button>
 
+  </section>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const supabase = window.supabase.createClient(
@@ -157,6 +168,44 @@
 
       document.getElementById('filtroPelicula').addEventListener('input', cargarRegistros);
       cargarRegistros();
+
+      document.getElementById('generar-pdf').addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const { data, error } = await supabase
+    .from('kdms')
+    .select('*')
+    .order('KDM abre', { ascending: false });
+
+  if (error) {
+    alert('Error al obtener datos');
+    return;
+  }
+
+  let y = 10;
+  doc.setFontSize(12);
+  doc.text('Reporte de KDMs', 10, y);
+  y += 10;
+
+  data.forEach((r, i) => {
+    doc.text(`Película: ${r['Pelicula'] || ''}`, 10, y); y += 6;
+    doc.text(`CPL recibida: ${r['CPL recibida'] ? 'Sí' : 'No'}`, 10, y); y += 6;
+    doc.text(`Fecha CPL: ${r['Fecha de cpl recibida'] || ''}`, 10, y); y += 6;
+    doc.text(`KDM recibido: ${r['KDM recibido'] ? 'Sí' : 'No'}`, 10, y); y += 6;
+    doc.text(`KDM ingestado: ${r['KDM ingestado'] ? 'Sí' : 'No'}`, 10, y); y += 6;
+    doc.text(`KDM abre: ${r['KDM abre'] || ''}`, 10, y); y += 6;
+    doc.text(`KDM cierra: ${r['KDM cierra'] || ''}`, 10, y); y += 6;
+    doc.text(`Formatos: ${r['Formatos y versiones'] || ''}`, 10, y); y += 6;
+    doc.text(`Distribuidor: ${r['Distribuidor'] || ''}`, 10, y); y += 10;
+
+    if (y > 270) { doc.addPage(); y = 10; }
+  });
+
+  doc.save('reporte_kdms.pdf');
+});
+
+
     });
 
     async function logout() {
