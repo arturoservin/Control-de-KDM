@@ -62,14 +62,14 @@
   </table>
 
   <form id="formKDM">
-    <input type="text" name="Pelicula" placeholder="Pelicula" required />
-    <label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
+    <p>Titulo (tal cual como esta pautado, si ya existen registros de esa pelicula usar el mismo titulo)</p><input type="text" name="Pelicula" placeholder="Pelicula" required />
+    <p></p><label><input type="checkbox" name="CPL recibida" /> CPL recibida</label>
     <input type="date" name="Fecha de cpl recibida" />
-    <label><input type="checkbox" name="KDM recibido" /> KDM recibido</label>
+    <p></p><label><input type="checkbox" name="KDM recibido" /> KDM recibido</label>
     <label><input type="checkbox" name="KDM ingestado" /> KDM ingestado</label>
     <p>KDM Abre</p><input type="date" name="KDM abre" />
     <p>KDM Cierra</p><input type="date" name="KDM cierra" />
-    <input type="text" name="Formatos y versiones" placeholder="Formatos y versiones EN LAS 2D 3D" />
+    <p>Formatos y versiones, colocar primero las versiones (EN LAS) y despues los formatos (2D 3D)</p><input type="text" name="Formatos y versiones" placeholder="Formatos y versiones EN LAS 2D 3D" />
     <input type="text" name="Distribuidor" placeholder="Distribuidor" />
     <button type="submit">Agregar registro</button>
   </form>
