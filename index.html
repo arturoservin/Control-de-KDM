@@ -61,6 +61,7 @@
         <th>KDM abre</th>
         <th>KDM cierra</th>
         <th>Formatos y versiones</th>
+        <th>HD o Satelite</th>
         <th>Distribuidor</th>
       </tr>
     </thead>
@@ -77,7 +78,10 @@
     <p>KDM Abre</p><input type="date" name="KDM abre" />
     <p>KDM Cierra</p><input type="date" name="KDM cierra" />
     <p>Formatos y versiones, colocar primero las versiones (EN LAS) y despues los formatos (2D 3D)</p><input type="text" name="Formatos y versiones" placeholder="Formatos y versiones EN LAS 2D 3D" />
-    
+    <select id="delivery" name="delivery" required>
+  <option value="HD">HD</option>
+  <option value="Satelite">Satelite</option>
+</select>
     <select id="distribuidor" name="distribuidor" required>
   <option value="">Selecciona distribuidor</option>
   <option value="Walt Disney Pictures">Walt Disney Pictures</option>
@@ -145,7 +149,9 @@
               <td>${registro['KDM ingestado'] ? '✅' : '❌'}</td>
               <td>${registro['KDM abre'] || ''}</td>
               <td>${registro['KDM cierra'] || ''}</td>
+              <td>${registro['delivery'] || ''}</td>
               <td>${registro['Formatos y versiones'] || ''}</td>
+              <td>${registro['delivery'] || ''}</td>
               <td>${registro['Distribuidor'] || ''}</td>
             `;
             tbody.appendChild(fila);
@@ -165,6 +171,7 @@
           'KDM abre': form['KDM abre'].value,
           'KDM cierra': form['KDM cierra'].value,
           'Formatos y versiones': form['Formatos y versiones'].value,
+          delivery: form['delivery'].value,
           Distribuidor: form['distribuidor'].value,
           user_id: user.id
         };
@@ -214,6 +221,7 @@
     doc.text(`KDM abre: ${r['KDM abre'] || ''}`, 10, y); y += 6;
     doc.text(`KDM cierra: ${r['KDM cierra'] || ''}`, 10, y); y += 6;
     doc.text(`Formatos: ${r['Formatos y versiones'] || ''}`, 10, y); y += 6;
+    doc.text(`delivery: ${r['delivery'] || ''}`, 10, y); y += 10;
     doc.text(`Distribuidor: ${r['Distribuidor'] || ''}`, 10, y); y += 10;
 
     if (y > 270) { doc.addPage(); y = 10; }
